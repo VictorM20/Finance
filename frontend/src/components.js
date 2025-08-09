@@ -597,6 +597,84 @@ export const Dashboard = () => {
               </div>
             </div>
           </div>
+
+          {/* Nova seção: Cartões de Crédito */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Cartões de Crédito</h3>
+            <div className="space-y-4">
+              {creditCards.map((card, index) => {
+                const daysUntilDue = Math.ceil((new Date(card.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
+                const usagePercentage = (card.used / card.limit) * 100;
+                
+                return (
+                  <div key={card.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-semibold text-gray-800 dark:text-white">{card.name}</h4>
+                      <span className={`text-sm font-medium ${daysUntilDue <= 5 ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'}`}>
+                        Vence em {daysUntilDue} dias
+                      </span>
+                    </div>
+                    
+                    <div className="mb-3">
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-gray-600 dark:text-gray-400">Limite: R$ {card.limit.toLocaleString('pt-BR')}</span>
+                        <span className="text-gray-600 dark:text-gray-400">{usagePercentage.toFixed(1)}% usado</span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full ${usagePercentage > 80 ? 'bg-red-500' : usagePercentage > 50 ? 'bg-yellow-500' : 'bg-green-500'}`}
+                          style={{ width: `${usagePercentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Fatura: </span>
+                        <span className="font-semibold text-red-600">R$ {card.invoice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Vencimento: </span>
+                        <span className="font-semibold text-gray-800 dark:text-white">
+                          {new Date(card.dueDate).toLocaleDateString('pt-BR')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Resumo das Últimas Transações */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white">Últimas Transações</h3>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {transactions.length} transações este mês
+            </span>
+          </div>
+          <div className="space-y-3">
+            {transactions.slice(0, 5).map((transaction) => (
+              <div key={transaction.id} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    transaction.type === 'income' ? 'bg-green-100 dark:bg-green-900 text-green-600' : 'bg-red-100 dark:bg-red-900 text-red-600'
+                  }`}>
+                    {transaction.type === 'income' ? '↗' : '↘'}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 dark:text-white">{transaction.description}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{transaction.category} • {new Date(transaction.date).toLocaleDateString('pt-BR')}</p>
+                  </div>
+                </div>
+                <span className={`font-bold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                  {transaction.type === 'income' ? '+' : ''}R$ {Math.abs(transaction.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
