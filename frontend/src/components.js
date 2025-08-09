@@ -1987,6 +1987,100 @@ export const Goals = () => {
             );
           })}
         </div>
+
+        {/* Modal de Nova Meta */}
+        {showAddGoal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-md mx-4">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Adicionar Meta</h2>
+              
+              <form onSubmit={handleAddGoal} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Nome da Meta</label>
+                  <input 
+                    type="text" 
+                    name="name"
+                    value={newGoal.name}
+                    onChange={handleGoalInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="Ex: Viagem para Europa"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Categoria</label>
+                  <select 
+                    name="category"
+                    value={newGoal.category}
+                    onChange={handleGoalInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="Viagem">Viagem</option>
+                    <option value="Emergência">Emergência</option>
+                    <option value="Veículo">Veículo</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Educação">Educação</option>
+                    <option value="Outros">Outros</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Valor Alvo</label>
+                  <input 
+                    type="number" 
+                    name="targetAmount"
+                    value={newGoal.targetAmount}
+                    onChange={handleGoalInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="15000"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Valor Atual (opcional)</label>
+                  <input 
+                    type="number" 
+                    name="currentAmount"
+                    value={newGoal.currentAmount}
+                    onChange={handleGoalInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="0"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Prazo</label>
+                  <input 
+                    type="date" 
+                    name="deadline"
+                    value={newGoal.deadline}
+                    onChange={handleGoalInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+                
+                <div className="flex space-x-4 mt-6">
+                  <button 
+                    type="button"
+                    onClick={() => setShowAddGoal(false)}
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    type="submit"
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Adicionar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
