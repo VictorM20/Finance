@@ -1,10 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
+
+// Context para o Dark Mode
+const ThemeContext = createContext();
+
+export const ThemeProvider = ({ children }) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('darkMode');
+    if (saved) {
+      setIsDarkMode(JSON.parse(saved));
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    localStorage.setItem('darkMode', JSON.stringify(newMode));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ isDarkMode, toggleDarkMode }}>
+      <div className={isDarkMode ? 'dark' : ''}>
+        {children}
+      </div>
+    </ThemeContext.Provider>
+  );
+};
+
+export const useTheme = () => useContext(ThemeContext);
 
 // Componente de Login
 export const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { isDarkMode } = useTheme();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,36 +57,36 @@ export const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+    <div className={`min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center p-4 ${isDarkMode ? 'dark:from-gray-800 dark:to-gray-900' : ''}`}>
+      <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md ${isDarkMode ? 'border border-gray-700' : ''}`}>
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-2xl">M</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800">Mobills</h1>
-          <p className="text-gray-600">Controle suas finanças</p>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Mobills</h1>
+          <p className="text-gray-600 dark:text-gray-300">Controle suas finanças</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="seu@email.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Senha</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="••••••••"
               required
             />
@@ -71,7 +102,7 @@ export const Login = ({ onLogin }) => {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
             Não tem conta? <a href="#" className="text-blue-600 font-medium">Cadastre-se</a>
           </p>
         </div>
@@ -133,35 +164,35 @@ export const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Olá, João!</h1>
-              <p className="text-gray-600">Aqui está um resumo das suas finanças</p>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Olá, João!</h1>
+              <p className="text-gray-600 dark:text-gray-300">Aqui está um resumo das suas finanças</p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-500">Saldo atual</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Saldo atual</p>
               <p className="text-3xl font-bold text-green-600">R$ {totalBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
             </div>
           </div>
         </div>
 
         {/* Market Data */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-800">Mercado Financeiro</h3>
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white">Mercado Financeiro</h3>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-500">Tempo Real</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">Tempo Real</span>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="text-center bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">USD/BRL</p>
-              <p className="text-lg font-bold">R$ {marketData.usd.value.toFixed(2)}</p>
+            <div className="text-center bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">USD/BRL</p>
+              <p className="text-lg font-bold dark:text-white">R$ {marketData.usd.value.toFixed(2)}</p>
               <div className="flex items-center justify-center space-x-1">
                 <p className={`text-xs ${marketData.usd.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {marketData.usd.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.usd.change).toFixed(1)}%
@@ -169,9 +200,9 @@ export const Dashboard = () => {
               </div>
               <p className="text-xs text-gray-400 mt-1">{marketData.usd.updated}</p>
             </div>
-            <div className="text-center bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">EUR/BRL</p>
-              <p className="text-lg font-bold">R$ {marketData.eur.value.toFixed(2)}</p>
+            <div className="text-center bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">EUR/BRL</p>
+              <p className="text-lg font-bold dark:text-white">R$ {marketData.eur.value.toFixed(2)}</p>
               <div className="flex items-center justify-center space-x-1">
                 <p className={`text-xs ${marketData.eur.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {marketData.eur.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.eur.change).toFixed(1)}%
@@ -179,9 +210,9 @@ export const Dashboard = () => {
               </div>
               <p className="text-xs text-gray-400 mt-1">{marketData.eur.updated}</p>
             </div>
-            <div className="text-center bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">Bitcoin</p>
-              <p className="text-lg font-bold">R$ {Math.round(marketData.btc.value).toLocaleString('pt-BR')}</p>
+            <div className="text-center bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Bitcoin</p>
+              <p className="text-lg font-bold dark:text-white">R$ {Math.round(marketData.btc.value).toLocaleString('pt-BR')}</p>
               <div className="flex items-center justify-center space-x-1">
                 <p className={`text-xs ${marketData.btc.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {marketData.btc.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.btc.change).toFixed(1)}%
@@ -189,9 +220,9 @@ export const Dashboard = () => {
               </div>
               <p className="text-xs text-gray-400 mt-1">{marketData.btc.updated}</p>
             </div>
-            <div className="text-center bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">SELIC</p>
-              <p className="text-lg font-bold">{marketData.selic.value}%</p>
+            <div className="text-center bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">SELIC</p>
+              <p className="text-lg font-bold dark:text-white">{marketData.selic.value}%</p>
               <div className="flex items-center justify-center space-x-1">
                 <p className={`text-xs ${marketData.selic.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {marketData.selic.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.selic.change).toFixed(1)}%
@@ -199,9 +230,9 @@ export const Dashboard = () => {
               </div>
               <p className="text-xs text-gray-400 mt-1">{marketData.selic.updated}</p>
             </div>
-            <div className="text-center bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">IPCA</p>
-              <p className="text-lg font-bold">{marketData.ipca.value}%</p>
+            <div className="text-center bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">IPCA</p>
+              <p className="text-lg font-bold dark:text-white">{marketData.ipca.value}%</p>
               <div className="flex items-center justify-center space-x-1">
                 <p className={`text-xs ${marketData.ipca.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {marketData.ipca.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.ipca.change).toFixed(1)}%
@@ -214,14 +245,14 @@ export const Dashboard = () => {
 
         {/* Cards de Resumo */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500 mb-1">Receitas do Mês</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Receitas do Mês</p>
                 <p className="text-2xl font-bold text-green-600">R$ {monthlyIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                 <p className="text-xs text-green-500 mt-1">↗ +12% vs mês anterior</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                 </svg>
@@ -229,14 +260,14 @@ export const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500 mb-1">Despesas do Mês</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Despesas do Mês</p>
                 <p className="text-2xl font-bold text-red-600">R$ {monthlyExpenses.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                 <p className="text-xs text-red-500 mt-1">↗ +5% vs mês anterior</p>
               </div>
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
                 </svg>
@@ -244,14 +275,14 @@ export const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500 mb-1">Economia</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Economia</p>
                 <p className="text-2xl font-bold text-blue-600">R$ {(monthlyIncome - monthlyExpenses).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                 <p className="text-xs text-blue-500 mt-1">26% do total</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                 </svg>
@@ -262,62 +293,318 @@ export const Dashboard = () => {
 
         {/* Gráfico de Gastos por Categoria */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-6">Gastos por Categoria</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Gastos por Categoria</h3>
             <div className="space-y-4">
               {categories.map((category, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-4 h-4 rounded-full" style={{ backgroundColor: category.color }}></div>
-                    <span className="text-gray-700">{category.name}</span>
+                    <span className="text-gray-700 dark:text-gray-300">{category.name}</span>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-gray-800">R$ {category.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    <p className="text-sm text-gray-500">{category.percentage}%</p>
+                    <p className="font-semibold text-gray-800 dark:text-white">R$ {category.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{category.percentage}%</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-6">Metas Financeiras</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Metas Financeiras</h3>
             <div className="space-y-6">
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-700">Viagem Férias</span>
-                  <span className="text-sm text-gray-500">70%</span>
+                  <span className="text-gray-700 dark:text-gray-300">Viagem Férias</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">70%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                   <div className="bg-blue-500 h-3 rounded-full" style={{ width: '70%' }}></div>
                 </div>
-                <p className="text-sm text-gray-500 mt-1">R$ 3.500 de R$ 5.000</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">R$ 3.500 de R$ 5.000</p>
               </div>
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-700">Emergência</span>
-                  <span className="text-sm text-gray-500">45%</span>
+                  <span className="text-gray-700 dark:text-gray-300">Emergência</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">45%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                   <div className="bg-green-500 h-3 rounded-full" style={{ width: '45%' }}></div>
                 </div>
-                <p className="text-sm text-gray-500 mt-1">R$ 4.500 de R$ 10.000</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">R$ 4.500 de R$ 10.000</p>
               </div>
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-700">Apartamento</span>
-                  <span className="text-sm text-gray-500">15%</span>
+                  <span className="text-gray-700 dark:text-gray-300">Apartamento</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">15%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                   <div className="bg-purple-500 h-3 rounded-full" style={{ width: '15%' }}></div>
                 </div>
-                <p className="text-sm text-gray-500 mt-1">R$ 15.000 de R$ 100.000</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">R$ 15.000 de R$ 100.000</p>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Componente de Cartões de Crédito
+export const CreditCards = () => {
+  const [cards, setCards] = useState([
+    {
+      id: 1,
+      name: 'Nubank Roxinho',
+      number: '**** **** **** 1234',
+      limit: 5000,
+      used: 2150.50,
+      available: 2849.50,
+      dueDate: '2024-02-15',
+      brand: 'Mastercard',
+      color: 'from-purple-600 to-purple-800'
+    },
+    {
+      id: 2,
+      name: 'Inter Gold',
+      number: '**** **** **** 5678',
+      limit: 8000,
+      used: 3200.75,
+      available: 4799.25,
+      dueDate: '2024-02-20',
+      brand: 'Visa',
+      color: 'from-orange-500 to-orange-700'
+    },
+    {
+      id: 3,
+      name: 'C6 Carbon',
+      number: '**** **** **** 9012',
+      limit: 12000,
+      used: 1850.30,
+      available: 10149.70,
+      dueDate: '2024-02-25',
+      brand: 'Mastercard',
+      color: 'from-gray-800 to-black'
+    }
+  ]);
+
+  const [showAddCard, setShowAddCard] = useState(false);
+
+  const totalLimit = cards.reduce((sum, card) => sum + card.limit, 0);
+  const totalUsed = cards.reduce((sum, card) => sum + card.used, 0);
+  const totalAvailable = totalLimit - totalUsed;
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Cartões de Crédito</h1>
+              <p className="text-gray-600 dark:text-gray-300">Gerencie seus cartões e faturas</p>
+            </div>
+            <button 
+              onClick={() => setShowAddCard(true)}
+              className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
+            >
+              + Novo Cartão
+            </button>
+          </div>
+        </div>
+
+        {/* Resumo dos Cartões */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Limite Total</p>
+                <p className="text-2xl font-bold text-blue-600">R$ {totalLimit.toLocaleString('pt-BR')}</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Usado</p>
+                <p className="text-2xl font-bold text-red-600">R$ {totalUsed.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+              </div>
+              <div className="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 0h10a2 2 0 002-2V9a2 2 0 00-2-2H9a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V9a2 2 0 00-2-2H9a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V9z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Disponível</p>
+                <p className="text-2xl font-bold text-green-600">R$ {totalAvailable.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Lista de Cartões */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {cards.map((card) => {
+            const usagePercentage = (card.used / card.limit) * 100;
+            const daysUntilDue = Math.ceil((new Date(card.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
+            
+            return (
+              <div key={card.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+                {/* Card Visual */}
+                <div className={`bg-gradient-to-br ${card.color} p-6 text-white relative`}>
+                  <div className="flex justify-between items-start mb-8">
+                    <div>
+                      <p className="text-sm opacity-80">Cartão</p>
+                      <p className="font-bold text-lg">{card.name}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs opacity-80">{card.brand}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-6">
+                    <p className="text-xl font-mono tracking-wider">{card.number}</p>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <div>
+                      <p className="text-xs opacity-80">Limite</p>
+                      <p className="font-semibold">R$ {card.limit.toLocaleString('pt-BR')}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs opacity-80">Vencimento</p>
+                      <p className="font-semibold">{new Date(card.dueDate).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card Info */}
+                <div className="p-6">
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Fatura Atual</span>
+                      <span className="text-sm font-semibold text-gray-800 dark:text-white">{usagePercentage.toFixed(1)}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${usagePercentage > 80 ? 'bg-red-500' : usagePercentage > 50 ? 'bg-yellow-500' : 'bg-green-500'}`}
+                        style={{ width: `${usagePercentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Usado:</span>
+                      <span className="font-semibold text-red-600">R$ {card.used.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Disponível:</span>
+                      <span className="font-semibold text-green-600">R$ {card.available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Vence em:</span>
+                      <span className={`font-semibold ${daysUntilDue <= 5 ? 'text-red-600' : 'text-gray-800 dark:text-white'}`}>
+                        {daysUntilDue} dias
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex space-x-2 mt-4">
+                    <button className="flex-1 bg-blue-50 dark:bg-blue-900 text-blue-600 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors">
+                      Ver Fatura
+                    </button>
+                    <button className="flex-1 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                      Bloquear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Modal de Novo Cartão */}
+        {showAddCard && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-md mx-4">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Adicionar Cartão</h2>
+              
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Nome do Cartão</label>
+                  <input 
+                    type="text" 
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="Ex: Nubank Roxinho"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Número do Cartão</label>
+                  <input 
+                    type="text" 
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="**** **** **** 0000"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Limite</label>
+                  <input 
+                    type="number" 
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="5000"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Vencimento da Fatura</label>
+                  <input 
+                    type="date" 
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                
+                <div className="flex space-x-4 mt-6">
+                  <button 
+                    type="button"
+                    onClick={() => setShowAddCard(false)}
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    type="submit"
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Adicionar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -383,14 +670,14 @@ export const Investments = () => {
   const totalYield = ((totalCurrent - totalInvested) / totalInvested) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Investimentos</h1>
-              <p className="text-gray-600">Acompanhe sua carteira de investimentos</p>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Investimentos</h1>
+              <p className="text-gray-600 dark:text-gray-300">Acompanhe sua carteira de investimentos</p>
             </div>
             <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
               + Novo Investimento
@@ -400,13 +687,13 @@ export const Investments = () => {
 
         {/* Resumo da Carteira */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Total Investido</p>
-                <p className="text-2xl font-bold text-gray-800">R$ {totalInvested.toLocaleString('pt-BR')}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Investido</p>
+                <p className="text-2xl font-bold text-gray-800 dark:text-white">R$ {totalInvested.toLocaleString('pt-BR')}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                 </svg>
@@ -414,13 +701,13 @@ export const Investments = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Valor Atual</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Valor Atual</p>
                 <p className="text-2xl font-bold text-green-600">R$ {totalCurrent.toLocaleString('pt-BR')}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
@@ -428,13 +715,13 @@ export const Investments = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Lucro/Prejuízo</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Lucro/Prejuízo</p>
                 <p className="text-2xl font-bold text-green-600">R$ {(totalCurrent - totalInvested).toLocaleString('pt-BR')}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                 </svg>
@@ -442,13 +729,13 @@ export const Investments = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Rentabilidade</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Rentabilidade</p>
                 <p className="text-2xl font-bold text-green-600">{totalYield.toFixed(2)}%</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                 </svg>
@@ -459,41 +746,41 @@ export const Investments = () => {
 
         {/* Distribuição da Carteira */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-6">Distribuição da Carteira</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Distribuição da Carteira</h3>
             <div className="space-y-4">
               {portfolio.map((investment) => (
                 <div key={investment.id} className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-4 h-4 rounded-full" style={{ backgroundColor: investment.color }}></div>
                     <div>
-                      <p className="font-semibold text-gray-800">{investment.name}</p>
-                      <p className="text-sm text-gray-500">{investment.type}</p>
+                      <p className="font-semibold text-gray-800 dark:text-white">{investment.name}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{investment.type}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-gray-800">{investment.allocation}%</p>
-                    <p className="text-sm text-gray-500">R$ {investment.currentValue.toLocaleString('pt-BR')}</p>
+                    <p className="font-semibold text-gray-800 dark:text-white">{investment.allocation}%</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">R$ {investment.currentValue.toLocaleString('pt-BR')}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-6">Performance Individual</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Performance Individual</h3>
             <div className="space-y-4">
               {portfolio.map((investment) => (
-                <div key={investment.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
+                <div key={investment.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg">
                   <div>
-                    <p className="font-semibold text-gray-800">{investment.name}</p>
-                    <p className="text-sm text-gray-500">{investment.type}</p>
+                    <p className="font-semibold text-gray-800 dark:text-white">{investment.name}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{investment.type}</p>
                   </div>
                   <div className="text-right">
                     <p className={`text-lg font-bold ${investment.yield >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {investment.yield >= 0 ? '+' : ''}{investment.yield.toFixed(2)}%
                     </p>
-                    <p className="text-sm text-gray-500">R$ {investment.currentValue.toLocaleString('pt-BR')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">R$ {investment.currentValue.toLocaleString('pt-BR')}</p>
                   </div>
                 </div>
               ))}
@@ -517,16 +804,18 @@ export const Profile = ({ user, onLogout }) => {
     address: 'São Paulo, SP'
   });
 
+  const { isDarkMode, toggleDarkMode } = useTheme();
+
   const handleSave = () => {
     setIsEditing(false);
     // Aqui salvaria os dados
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center space-x-6">
             <img
               src={user.avatar}
@@ -534,13 +823,13 @@ export const Profile = ({ user, onLogout }) => {
               className="w-20 h-20 rounded-full object-cover"
             />
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-800">{user.name}</h1>
-              <p className="text-gray-600">{user.email}</p>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{user.name}</h1>
+              <p className="text-gray-600 dark:text-gray-300">{user.email}</p>
               <div className="flex items-center space-x-2 mt-2">
                 <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm">
                   {user.plan}
                 </span>
-                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm">
                   Ativo
                 </span>
               </div>
@@ -556,9 +845,9 @@ export const Profile = ({ user, onLogout }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Informações Pessoais */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-800">Informações Pessoais</h2>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">Informações Pessoais</h2>
               <button
                 onClick={() => setIsEditing(!isEditing)}
                 className="text-blue-600 hover:text-blue-700 font-medium"
@@ -569,77 +858,77 @@ export const Profile = ({ user, onLogout }) => {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Nome Completo</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={userData.name}
                     onChange={(e) => setUserData({...userData, name: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 ) : (
-                  <p className="text-gray-800">{userData.name}</p>
+                  <p className="text-gray-800 dark:text-white">{userData.name}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Email</label>
                 {isEditing ? (
                   <input
                     type="email"
                     value={userData.email}
                     onChange={(e) => setUserData({...userData, email: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 ) : (
-                  <p className="text-gray-800">{userData.email}</p>
+                  <p className="text-gray-800 dark:text-white">{userData.email}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Telefone</label>
                 {isEditing ? (
                   <input
                     type="tel"
                     value={userData.phone}
                     onChange={(e) => setUserData({...userData, phone: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 ) : (
-                  <p className="text-gray-800">{userData.phone}</p>
+                  <p className="text-gray-800 dark:text-white">{userData.phone}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Data de Nascimento</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Data de Nascimento</label>
                 {isEditing ? (
                   <input
                     type="date"
                     value={userData.birthDate}
                     onChange={(e) => setUserData({...userData, birthDate: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 ) : (
-                  <p className="text-gray-800">{new Date(userData.birthDate).toLocaleDateString('pt-BR')}</p>
+                  <p className="text-gray-800 dark:text-white">{new Date(userData.birthDate).toLocaleDateString('pt-BR')}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">CPF</label>
-                <p className="text-gray-800">{userData.cpf}</p>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">CPF</label>
+                <p className="text-gray-800 dark:text-white">{userData.cpf}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Endereço</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={userData.address}
                     onChange={(e) => setUserData({...userData, address: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 ) : (
-                  <p className="text-gray-800">{userData.address}</p>
+                  <p className="text-gray-800 dark:text-white">{userData.address}</p>
                 )}
               </div>
 
@@ -657,8 +946,8 @@ export const Profile = ({ user, onLogout }) => {
           {/* Configurações e Estatísticas */}
           <div className="space-y-6">
             {/* Plano */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">Plano Atual</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Plano Atual</h3>
               <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-white">
                 <h4 className="font-bold text-lg">Mobills Premium</h4>
                 <p className="text-sm opacity-90 mt-1">Acesso completo a todas as funcionalidades</p>
@@ -670,47 +959,64 @@ export const Profile = ({ user, onLogout }) => {
             </div>
 
             {/* Estatísticas */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">Suas Estatísticas</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Suas Estatísticas</h3>
               <div className="space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Membro desde</span>
-                  <span className="font-semibold">Janeiro 2023</span>
+                  <span className="text-gray-600 dark:text-gray-400">Membro desde</span>
+                  <span className="font-semibold dark:text-white">Janeiro 2023</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Transações registradas</span>
-                  <span className="font-semibold">1.247</span>
+                  <span className="text-gray-600 dark:text-gray-400">Transações registradas</span>
+                  <span className="font-semibold dark:text-white">1.247</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Economia total</span>
+                  <span className="text-gray-600 dark:text-gray-400">Economia total</span>
                   <span className="font-semibold text-green-600">R$ 24.850</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Metas alcançadas</span>
-                  <span className="font-semibold">12/18</span>
+                  <span className="text-gray-600 dark:text-gray-400">Metas alcançadas</span>
+                  <span className="font-semibold dark:text-white">12/18</span>
                 </div>
               </div>
             </div>
 
             {/* Configurações */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">Configurações</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Configurações</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Notificações push</span>
-                  <input type="checkbox" className="toggle" defaultChecked />
+                  <span className="text-gray-700 dark:text-gray-300">Notificações push</span>
+                  <label className="inline-flex relative items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" defaultChecked />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Emails promocionais</span>
-                  <input type="checkbox" className="toggle" />
+                  <span className="text-gray-700 dark:text-gray-300">Emails promocionais</span>
+                  <label className="inline-flex relative items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Sincronização automática</span>
-                  <input type="checkbox" className="toggle" defaultChecked />
+                  <span className="text-gray-700 dark:text-gray-300">Sincronização automática</span>
+                  <label className="inline-flex relative items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" defaultChecked />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Modo escuro</span>
-                  <input type="checkbox" className="toggle" />
+                  <span className="text-gray-700 dark:text-gray-300">Modo escuro</span>
+                  <label className="inline-flex relative items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      className="sr-only peer" 
+                      checked={isDarkMode}
+                      onChange={toggleDarkMode}
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
                 </div>
               </div>
             </div>
@@ -783,12 +1089,12 @@ export const Transactions = () => {
   const [showAddTransaction, setShowAddTransaction] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-800">Transações</h1>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Transações</h1>
             <button 
               onClick={() => setShowAddTransaction(true)}
               className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
@@ -799,14 +1105,14 @@ export const Transactions = () => {
         </div>
 
         {/* Lista de Transações */}
-        <div className="bg-white rounded-2xl shadow-lg">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
           <div className="p-6">
             <div className="space-y-4">
               {transactions.map((transaction) => (
-                <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-colors">
+                <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
                   <div className="flex items-center space-x-4">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      transaction.type === 'income' ? 'bg-green-100' : 'bg-red-100'
+                      transaction.type === 'income' ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'
                     }`}>
                       {transaction.type === 'income' ? (
                         <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -819,8 +1125,8 @@ export const Transactions = () => {
                       )}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-800">{transaction.description}</p>
-                      <p className="text-sm text-gray-500">{transaction.category} • {transaction.account}</p>
+                      <p className="font-semibold text-gray-800 dark:text-white">{transaction.description}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{transaction.category} • {transaction.account}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -829,7 +1135,7 @@ export const Transactions = () => {
                     }`}>
                       {transaction.type === 'income' ? '+' : ''}R$ {Math.abs(transaction.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </p>
-                    <p className="text-sm text-gray-500">{new Date(transaction.date).toLocaleDateString('pt-BR')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(transaction.date).toLocaleDateString('pt-BR')}</p>
                   </div>
                 </div>
               ))}
@@ -840,39 +1146,39 @@ export const Transactions = () => {
         {/* Modal de Nova Transação */}
         {showAddTransaction && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">Nova Transação</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-md mx-4">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Nova Transação</h2>
               
               <form className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Descrição</label>
                   <input 
                     type="text" 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     placeholder="Ex: Supermercado"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Valor</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Valor</label>
                   <input 
                     type="number" 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     placeholder="0,00"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Tipo</label>
+                  <select className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                     <option value="expense">Despesa</option>
                     <option value="income">Receita</option>
                   </select>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Categoria</label>
+                  <select className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                     <option value="alimentacao">Alimentação</option>
                     <option value="transporte">Transporte</option>
                     <option value="moradia">Moradia</option>
@@ -886,7 +1192,7 @@ export const Transactions = () => {
                   <button 
                     type="button"
                     onClick={() => setShowAddTransaction(false)}
-                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     Cancelar
                   </button>
@@ -939,14 +1245,14 @@ export const Goals = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Metas Financeiras</h1>
-              <p className="text-gray-600">Acompanhe o progresso dos seus objetivos</p>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Metas Financeiras</h1>
+              <p className="text-gray-600 dark:text-gray-300">Acompanhe o progresso dos seus objetivos</p>
             </div>
             <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
               + Nova Meta
@@ -962,24 +1268,24 @@ export const Goals = () => {
             const daysRemaining = Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24));
             
             return (
-              <div key={goal.id} className="bg-white rounded-2xl shadow-lg p-6">
+              <div key={goal.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: `${goal.color}20` }}>
                     <svg className="w-6 h-6" style={{ color: goal.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                     </svg>
                   </div>
-                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{goal.category}</span>
+                  <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-full">{goal.category}</span>
                 </div>
                 
-                <h3 className="text-lg font-bold text-gray-800 mb-2">{goal.name}</h3>
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">{goal.name}</h3>
                 
                 <div className="mb-4">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-xs text-gray-500">Progresso</span>
-                    <span className="text-xs font-semibold text-gray-700">{percentage}%</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Progresso</span>
+                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">{percentage}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div 
                       className="h-2 rounded-full transition-all duration-300" 
                       style={{ backgroundColor: goal.color, width: `${percentage}%` }}
@@ -989,24 +1295,24 @@ export const Goals = () => {
                 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Atual:</span>
-                    <span className="font-semibold text-gray-800">R$ {goal.currentAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Atual:</span>
+                    <span className="font-semibold text-gray-800 dark:text-white">R$ {goal.currentAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Meta:</span>
-                    <span className="font-semibold text-gray-800">R$ {goal.targetAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Meta:</span>
+                    <span className="font-semibold text-gray-800 dark:text-white">R$ {goal.targetAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Faltam:</span>
+                    <span className="text-gray-500 dark:text-gray-400">Faltam:</span>
                     <span className="font-semibold text-red-600">R$ {remaining.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Prazo:</span>
-                    <span className="font-semibold text-gray-800">{daysRemaining} dias</span>
+                    <span className="text-gray-500 dark:text-gray-400">Prazo:</span>
+                    <span className="font-semibold text-gray-800 dark:text-white">{daysRemaining} dias</span>
                   </div>
                 </div>
                 
-                <button className="w-full mt-4 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+                <button className="w-full mt-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                   Adicionar Valor
                 </button>
               </div>
@@ -1032,19 +1338,19 @@ export const Reports = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Relatórios</h1>
-              <p className="text-gray-600">Análise detalhada das suas finanças</p>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Relatórios</h1>
+              <p className="text-gray-600 dark:text-gray-300">Análise detalhada das suas finanças</p>
             </div>
             <select 
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="thisMonth">Este mês</option>
               <option value="lastMonth">Mês passado</option>
@@ -1056,13 +1362,13 @@ export const Reports = () => {
 
         {/* Cards de Resumo */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Total Receitas</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Receitas</p>
                 <p className="text-2xl font-bold text-green-600">R$ 31.800</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                 </svg>
@@ -1070,13 +1376,13 @@ export const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Total Despesas</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Despesas</p>
                 <p className="text-2xl font-bold text-red-600">R$ 23.547</p>
               </div>
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
                 </svg>
@@ -1084,13 +1390,13 @@ export const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Economia Total</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Economia Total</p>
                 <p className="text-2xl font-bold text-blue-600">R$ 8.253</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                 </svg>
@@ -1098,13 +1404,13 @@ export const Reports = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Taxa de Economia</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Taxa de Economia</p>
                 <p className="text-2xl font-bold text-purple-600">26%</p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                 </svg>
@@ -1114,8 +1420,8 @@ export const Reports = () => {
         </div>
 
         {/* Gráfico de Evolução */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <h3 className="text-xl font-bold text-gray-800 mb-6">Evolução Mensal</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Evolução Mensal</h3>
           <div className="h-64 flex items-end justify-between space-x-2">
             {monthlyData.map((data, index) => (
               <div key={index} className="flex-1 flex flex-col items-center">
@@ -1129,18 +1435,18 @@ export const Reports = () => {
                     style={{ height: `${(data.expenses / 6000) * 200}px` }}
                   ></div>
                 </div>
-                <span className="text-xs text-gray-500 mt-2">{data.month}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-2">{data.month}</span>
               </div>
             ))}
           </div>
           <div className="flex justify-center space-x-6 mt-4">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-green-500 rounded"></div>
-              <span className="text-sm text-gray-600">Receitas</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Receitas</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-red-500 rounded"></div>
-              <span className="text-sm text-gray-600">Despesas</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Despesas</span>
             </div>
           </div>
         </div>
@@ -1154,6 +1460,7 @@ export const Sidebar = ({ activeTab, setActiveTab, user }) => {
   const menuItems = [
     { id: 'dashboard', name: 'Dashboard', icon: '📊' },
     { id: 'transactions', name: 'Transações', icon: '💳' },
+    { id: 'creditcards', name: 'Cartões', icon: '💎' },
     { id: 'investments', name: 'Investimentos', icon: '📈' },
     { id: 'goals', name: 'Metas', icon: '🎯' },
     { id: 'reports', name: 'Relatórios', icon: '📋' },
@@ -1161,20 +1468,20 @@ export const Sidebar = ({ activeTab, setActiveTab, user }) => {
   ];
 
   return (
-    <div className="w-64 bg-white h-full shadow-lg">
+    <div className="w-64 bg-white dark:bg-gray-800 h-full shadow-lg">
       <div className="p-6">
         <div className="flex items-center space-x-3 mb-8">
           <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
             <span className="text-white font-bold text-lg">M</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-800">Mobills</h1>
-            <p className="text-xs text-gray-500">Controle Financeiro</p>
+            <h1 className="text-xl font-bold text-gray-800 dark:text-white">Mobills</h1>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Controle Financeiro</p>
           </div>
         </div>
 
         {/* User Info */}
-        <div className="bg-gray-50 rounded-lg p-3 mb-6">
+        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-6">
           <div className="flex items-center space-x-3">
             <img
               src={user?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?crop=face&fit=crop&w=40&h=40'}
@@ -1182,8 +1489,8 @@ export const Sidebar = ({ activeTab, setActiveTab, user }) => {
               className="w-8 h-8 rounded-full object-cover"
             />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-800 truncate">{user?.name || 'Usuário'}</p>
-              <p className="text-xs text-gray-500">{user?.plan || 'Free'}</p>
+              <p className="text-sm font-medium text-gray-800 dark:text-white truncate">{user?.name || 'Usuário'}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{user?.plan || 'Free'}</p>
             </div>
           </div>
         </div>
@@ -1195,8 +1502,8 @@ export const Sidebar = ({ activeTab, setActiveTab, user }) => {
               onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 activeTab === item.id
-                  ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600'
-                  : 'text-gray-600 hover:bg-gray-50'
+                  ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 border-r-4 border-blue-600'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               <span className="text-xl">{item.icon}</span>

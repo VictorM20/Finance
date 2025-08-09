@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import { Dashboard, Transactions, Goals, Reports, Investments, Profile, Sidebar, Login } from './components';
+import { Dashboard, Transactions, Goals, Reports, Investments, CreditCards, Profile, Sidebar, Login, ThemeProvider } from './components';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -15,17 +15,14 @@ function App() {
     setActiveTab('dashboard');
   };
 
-  // Se não estiver logado, mostra a tela de login
-  if (!user) {
-    return <Login onLogin={handleLogin} />;
-  }
-
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
         return <Dashboard />;
       case 'transactions':
         return <Transactions />;
+      case 'creditcards':
+        return <CreditCards />;
       case 'investments':
         return <Investments />;
       case 'goals':
@@ -40,12 +37,21 @@ function App() {
   };
 
   return (
-    <div className="App min-h-screen bg-gray-50 flex">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
-      <div className="flex-1 overflow-auto">
-        {renderContent()}
+    <ThemeProvider>
+      <div className="App min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+        {/* Se não estiver logado, mostra a tela de login */}
+        {!user ? (
+          <Login onLogin={handleLogin} />
+        ) : (
+          <>
+            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
+            <div className="flex-1 overflow-auto">
+              {renderContent()}
+            </div>
+          </>
+        )}
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 
