@@ -1326,9 +1326,6 @@ export const Profile = ({ user, onLogout }) => {
               <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{user.name}</h1>
               <p className="text-gray-600 dark:text-gray-300">{user.email}</p>
               <div className="flex items-center space-x-2 mt-2">
-                <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm">
-                  {user.plan}
-                </span>
                 <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm">
                   Ativo
                 </span>
