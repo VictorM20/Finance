@@ -1198,8 +1198,8 @@ export const Investments = () => {
                     <p className="text-sm text-gray-500 dark:text-gray-400">{investment.type}</p>
                   </div>
                   <div className="text-right">
-                    <p className={`text-lg font-bold ${investment.yield >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {investment.yield >= 0 ? '+' : ''}{investment.yield.toFixed(2)}%
+                    <p className={`text-lg font-bold ${investment.yieldValue >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {investment.yieldValue >= 0 ? '+' : ''}{investment.yieldValue.toFixed(2)}%
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">R$ {investment.currentValue.toLocaleString('pt-BR')}</p>
                   </div>
