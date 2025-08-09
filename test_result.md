@@ -101,3 +101,146 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Fix the following bugs in the Mobills financial application:
+  1. Dark mode button in profile not working
+  2. Dashboard not updating with transactions 
+  3. Add credit card limits and invoice values with due dates to dashboard
+  4. In cards tab, expiration should only show day and month
+  5. Adding a card returns to login
+  6. In investments tab, +new investment button not working
+  7. In goals tab, +new goal button not working
+  8. Remove premium and free plan functionality
+
+backend:
+  - task: "Remove premium/free plan functionality from backend"
+    implemented: false
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Need to remove plan-related API endpoints and data from backend"
+
+frontend:
+  - task: "Fix dark mode button in profile"
+    implemented: false
+    working: false
+    file: "components.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Dark mode toggle exists but may not be properly connected"
+
+  - task: "Update dashboard with transaction data"
+    implemented: false
+    working: false
+    file: "components.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Dashboard shows static data, needs to connect with transactions"
+
+  - task: "Add credit card info to dashboard"
+    implemented: false
+    working: false
+    file: "components.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Need to add credit card limits, invoice values and due dates to dashboard"
+
+  - task: "Fix credit card expiration display"
+    implemented: false
+    working: false
+    file: "components.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Currently shows full date, should only show day and month"
+
+  - task: "Fix add card functionality"
+    implemented: false
+    working: false
+    file: "components.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Adding card returns to login instead of saving card"
+
+  - task: "Fix new investment button"
+    implemented: false
+    working: false
+    file: "components.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "+Novo Investimento button not functioning"
+
+  - task: "Fix new goal button"
+    implemented: false
+    working: false
+    file: "components.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "+Nova Meta button not functioning"
+
+  - task: "Remove premium/free plan functionality from frontend"
+    implemented: false
+    working: false
+    file: "components.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Remove plan references from UI components"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Fix dark mode button in profile"
+    - "Update dashboard with transaction data"
+    - "Add credit card info to dashboard"
+    - "Fix add card functionality"
+    - "Fix new investment button"
+    - "Fix new goal button"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Starting bug fixes for Mobills financial application. Will address all 8 issues systematically, starting with frontend fixes then backend cleanup."
