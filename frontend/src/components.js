@@ -997,7 +997,7 @@ export const Investments = () => {
       type: 'Renda Fixa',
       amount: 15000,
       currentValue: 15850,
-      yield: 5.67,
+      yieldValue: 5.67,
       allocation: 35,
       color: '#4ECDC4'
     },
@@ -1007,7 +1007,7 @@ export const Investments = () => {
       type: 'Ações',
       amount: 8000,
       currentValue: 9200,
-      yield: 15.0,
+      yieldValue: 15.0,
       allocation: 22,
       color: '#45B7D1'
     },
@@ -1017,7 +1017,7 @@ export const Investments = () => {
       type: 'FII',
       amount: 6000,
       currentValue: 6480,
-      yield: 8.0,
+      yieldValue: 8.0,
       allocation: 15,
       color: '#96CEB4'
     },
@@ -1027,7 +1027,7 @@ export const Investments = () => {
       type: 'Crypto',
       amount: 5000,
       currentValue: 7500,
-      yield: 50.0,
+      yieldValue: 50.0,
       allocation: 18,
       color: '#FF6B6B'
     },
@@ -1037,7 +1037,7 @@ export const Investments = () => {
       type: 'Renda Fixa',
       amount: 4000,
       currentValue: 4120,
-      yield: 3.0,
+      yieldValue: 3.0,
       allocation: 10,
       color: '#FECA57'
     }
@@ -1051,6 +1051,9 @@ export const Investments = () => {
     currentValue: ''
   });
 
+  const totalInvested = portfolio.reduce((sum, item) => sum + item.amount, 0);
+  const totalCurrent = portfolio.reduce((sum, item) => sum + item.currentValue, 0);
+
   const handleAddInvestment = (e) => {
     e.preventDefault();
     if (!newInvestment.name || !newInvestment.amount || !newInvestment.currentValue) {
@@ -1060,7 +1063,7 @@ export const Investments = () => {
 
     const amount = parseFloat(newInvestment.amount);
     const currentValue = parseFloat(newInvestment.currentValue);
-    const yield = ((currentValue - amount) / amount) * 100;
+    const yieldValue = ((currentValue - amount) / amount) * 100;
 
     const investment = {
       id: portfolio.length + 1,
@@ -1068,8 +1071,8 @@ export const Investments = () => {
       type: newInvestment.type,
       amount: amount,
       currentValue: currentValue,
-      yield: yield,
-      allocation: Math.round((currentValue / totalCurrent) * 100),
+      yieldValue: yieldValue,
+      allocation: Math.round((currentValue / (totalCurrent + currentValue)) * 100),
       color: '#' + Math.floor(Math.random()*16777215).toString(16)
     };
 
