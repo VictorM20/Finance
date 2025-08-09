@@ -339,9 +339,32 @@ export const Register = ({ onRegister, onSwitchToLogin }) => {
 
 // Componente do Dashboard Principal
 export const Dashboard = () => {
-  const [totalBalance, setTotalBalance] = useState(8547.32);
-  const [monthlyIncome, setMonthlyIncome] = useState(5200.00);
-  const [monthlyExpenses, setMonthlyExpenses] = useState(3847.68);
+  // Estados para transações e cartões
+  const [transactions, setTransactions] = useState([
+    { id: 1, description: 'Salário', amount: 5200.00, type: 'income', category: 'Salário', date: '2024-01-01' },
+    { id: 2, description: 'Supermercado Extra', amount: -185.50, type: 'expense', category: 'Alimentação', date: '2024-01-03' },
+    { id: 3, description: 'Combustível', amount: -120.00, type: 'expense', category: 'Transporte', date: '2024-01-05' },
+    { id: 4, description: 'Aluguel', amount: -1500.00, type: 'expense', category: 'Moradia', date: '2024-01-05' },
+    { id: 5, description: 'Freelance', amount: 800.00, type: 'income', category: 'Renda Extra', date: '2024-01-07' }
+  ]);
+
+  const [creditCards, setCreditCards] = useState([
+    { id: 1, name: 'Nubank Roxinho', limit: 5000, used: 2150.50, dueDate: '2024-02-15', invoice: 2150.50 },
+    { id: 2, name: 'Inter Gold', limit: 8000, used: 3200.75, dueDate: '2024-02-20', invoice: 3200.75 },
+    { id: 3, name: 'C6 Carbon', limit: 12000, used: 1850.30, dueDate: '2024-02-25', invoice: 1850.30 }
+  ]);
+
+  // Calcular valores baseados nas transações reais
+  const monthlyIncome = transactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+  
+  const monthlyExpenses = Math.abs(transactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0));
+  
+  const totalBalance = monthlyIncome - monthlyExpenses + 2000; // Base inicial
+  
   const [selectedPeriod, setSelectedPeriod] = useState('thisMonth');
   const [marketData, setMarketData] = useState({
     usd: { value: 5.25, change: 0.8, updated: '12:34' },
