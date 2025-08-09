@@ -1053,41 +1053,6 @@ export const Investments = () => {
 
   const totalInvested = portfolio.reduce((sum, item) => sum + item.amount, 0);
   const totalCurrent = portfolio.reduce((sum, item) => sum + item.currentValue, 0);
-
-  const handleAddInvestment = (e) => {
-    e.preventDefault();
-    if (!newInvestment.name || !newInvestment.amount || !newInvestment.currentValue) {
-      alert('Por favor, preencha todos os campos');
-      return;
-    }
-
-    const amount = parseFloat(newInvestment.amount);
-    const currentValue = parseFloat(newInvestment.currentValue);
-    const yieldValue = ((currentValue - amount) / amount) * 100;
-
-    const investment = {
-      id: portfolio.length + 1,
-      name: newInvestment.name,
-      type: newInvestment.type,
-      amount: amount,
-      currentValue: currentValue,
-      yieldValue: yieldValue,
-      allocation: Math.round((currentValue / (totalCurrent + currentValue)) * 100),
-      color: '#' + Math.floor(Math.random()*16777215).toString(16)
-    };
-
-    setPortfolio([...portfolio, investment]);
-    setShowAddInvestment(false);
-    setNewInvestment({ name: '', type: 'Renda Fixa', amount: '', currentValue: '' });
-  };
-
-  const handleInvestmentInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewInvestment(prev => ({ ...prev, [name]: value }));
-  };
-
-  const totalInvested = portfolio.reduce((sum, item) => sum + item.amount, 0);
-  const totalCurrent = portfolio.reduce((sum, item) => sum + item.currentValue, 0);
   const totalYield = ((totalCurrent - totalInvested) / totalInvested) * 100;
 
   return (
