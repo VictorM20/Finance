@@ -1097,7 +1097,10 @@ export const Investments = () => {
               <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Investimentos</h1>
               <p className="text-gray-600 dark:text-gray-300">Acompanhe sua carteira de investimentos</p>
             </div>
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
+            <button 
+              onClick={() => setShowAddInvestment(true)}
+              className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
+            >
               + Novo Investimento
             </button>
           </div>
