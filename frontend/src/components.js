@@ -1843,7 +1843,7 @@ export const Transactions = () => {
 
 // Componente de Metas
 export const Goals = () => {
-  const goals = [
+  const [goals, setGoals] = useState([
     {
       id: 1,
       name: 'Viagem para Europa',
@@ -1871,7 +1871,43 @@ export const Goals = () => {
       category: 'Veículo',
       color: '#96CEB4'
     }
-  ];
+  ]);
+
+  const [showAddGoal, setShowAddGoal] = useState(false);
+  const [newGoal, setNewGoal] = useState({
+    name: '',
+    targetAmount: '',
+    currentAmount: '',
+    deadline: '',
+    category: 'Viagem'
+  });
+
+  const handleAddGoal = (e) => {
+    e.preventDefault();
+    if (!newGoal.name || !newGoal.targetAmount || !newGoal.deadline) {
+      alert('Por favor, preencha todos os campos obrigatórios');
+      return;
+    }
+
+    const goal = {
+      id: goals.length + 1,
+      name: newGoal.name,
+      targetAmount: parseFloat(newGoal.targetAmount),
+      currentAmount: parseFloat(newGoal.currentAmount) || 0,
+      deadline: newGoal.deadline,
+      category: newGoal.category,
+      color: '#' + Math.floor(Math.random()*16777215).toString(16)
+    };
+
+    setGoals([...goals, goal]);
+    setShowAddGoal(false);
+    setNewGoal({ name: '', targetAmount: '', currentAmount: '', deadline: '', category: 'Viagem' });
+  };
+
+  const handleGoalInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewGoal(prev => ({ ...prev, [name]: value }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
