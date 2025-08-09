@@ -212,8 +212,7 @@ export const Register = ({ onRegister, onSwitchToLogin }) => {
         id: 1,
         name: formData.name,
         email: formData.email,
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?crop=face&fit=crop&w=100&h=100',
-        plan: 'Free'
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?crop=face&fit=crop&w=100&h=100'
       });
       setIsLoading(false);
     }, 1500);
