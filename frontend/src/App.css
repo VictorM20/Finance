@@ -1,38 +1,145 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
 .App {
-    text-align: center;
+  min-height: 100vh;
 }
 
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
 }
 
-.App-link {
-    color: #61dafb;
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+/* Animações suaves */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effects personalizados */
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Gradient backgrounds */
+.gradient-blue-purple {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-green-teal {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.gradient-orange-red {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+}
+
+/* Loading animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium;
+}
+
+.btn-secondary {
+  @apply bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium;
+}
+
+.btn-success {
+  @apply bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium;
+}
+
+/* Typography improvements */
+.text-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Mobile responsiveness improvements */
+@media (max-width: 768px) {
+  .mobile-padding {
+    padding: 1rem;
+  }
+  
+  .mobile-text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .mobile-grid-1 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Focus styles for accessibility */
+input:focus, select:focus, textarea:focus, button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Custom progress bar */
+.progress-bar {
+  background: linear-gradient(90deg, #3b82f6 var(--progress, 0%), #e5e7eb var(--progress, 0%));
+  transition: background 0.3s ease;
+}
+
+/* Toast notifications */
+.toast {
+  @apply fixed top-4 right-4 bg-white shadow-lg rounded-lg p-4 border-l-4 z-50;
+}
+
+.toast-success {
+  @apply border-green-500;
+}
+
+.toast-error {
+  @apply border-red-500;
+}
+
+.toast-warning {
+  @apply border-yellow-500;
+}
+
+.toast-info {
+  @apply border-blue-500;
 }
