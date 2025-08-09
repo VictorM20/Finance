@@ -87,12 +87,41 @@ export const Dashboard = () => {
   const [monthlyExpenses, setMonthlyExpenses] = useState(3847.68);
   const [selectedPeriod, setSelectedPeriod] = useState('thisMonth');
   const [marketData, setMarketData] = useState({
-    usd: { value: 5.25, change: 0.8 },
-    eur: { value: 5.89, change: -0.3 },
-    btc: { value: 248500, change: 2.4 },
-    selic: { value: 10.75, change: 0.0 },
-    ipca: { value: 4.23, change: 0.1 }
+    usd: { value: 5.25, change: 0.8, updated: '12:34' },
+    eur: { value: 5.89, change: -0.3, updated: '12:34' },
+    btc: { value: 248500, change: 2.4, updated: '12:34' },
+    selic: { value: 10.75, change: 0.0, updated: 'Jan/24' },
+    ipca: { value: 4.23, change: 0.1, updated: 'Dez/23' }
   });
+
+  // Simular atualização de cotações em tempo real
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMarketData(prev => ({
+        ...prev,
+        usd: {
+          ...prev.usd,
+          value: prev.usd.value + (Math.random() - 0.5) * 0.1,
+          change: prev.usd.change + (Math.random() - 0.5) * 0.2,
+          updated: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        },
+        eur: {
+          ...prev.eur,
+          value: prev.eur.value + (Math.random() - 0.5) * 0.1,
+          change: prev.eur.change + (Math.random() - 0.5) * 0.2,
+          updated: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        },
+        btc: {
+          ...prev.btc,
+          value: prev.btc.value + (Math.random() - 0.5) * 5000,
+          change: prev.btc.change + (Math.random() - 0.5) * 1,
+          updated: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        }
+      }));
+    }, 10000); // Atualizar a cada 10 segundos
+
+    return () => clearInterval(interval);
+  }, []);
 
   const categories = [
     { name: 'Alimentação', amount: 890.50, color: '#FF6B6B', percentage: 23 },
