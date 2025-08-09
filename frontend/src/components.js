@@ -912,13 +912,17 @@ export const CreditCards = () => {
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-md mx-4">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Adicionar Cartão</h2>
               
-              <form className="space-y-4">
+              <form onSubmit={handleAddCard} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Nome do Cartão</label>
                   <input 
                     type="text" 
+                    name="name"
+                    value={newCard.name}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     placeholder="Ex: Nubank Roxinho"
+                    required
                   />
                 </div>
                 
@@ -926,8 +930,12 @@ export const CreditCards = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Número do Cartão</label>
                   <input 
                     type="text" 
+                    name="number"
+                    value={newCard.number}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     placeholder="**** **** **** 0000"
+                    required
                   />
                 </div>
                 
@@ -935,8 +943,12 @@ export const CreditCards = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Limite</label>
                   <input 
                     type="number" 
+                    name="limit"
+                    value={newCard.limit}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     placeholder="5000"
+                    required
                   />
                 </div>
                 
@@ -944,7 +956,11 @@ export const CreditCards = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Vencimento da Fatura</label>
                   <input 
                     type="date" 
+                    name="dueDate"
+                    value={newCard.dueDate}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
                   />
                 </div>
                 
