@@ -1442,19 +1442,6 @@ export const Profile = ({ user, onLogout }) => {
 
           {/* Configurações e Estatísticas */}
           <div className="space-y-6">
-            {/* Plano */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Plano Atual</h3>
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-white">
-                <h4 className="font-bold text-lg">Mobills Premium</h4>
-                <p className="text-sm opacity-90 mt-1">Acesso completo a todas as funcionalidades</p>
-                <div className="flex justify-between items-center mt-4">
-                  <span className="text-sm">Próxima cobrança: 15/02/2024</span>
-                  <span className="font-bold">R$ 9,90/mês</span>
-                </div>
-              </div>
-            </div>
-
             {/* Estatísticas */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
               <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Suas Estatísticas</h3>
