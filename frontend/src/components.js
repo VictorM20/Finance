@@ -820,7 +820,7 @@ export const CreditCards = () => {
                     </div>
                     <div className="text-right">
                       <p className="text-xs opacity-80">Vencimento</p>
-                      <p className="font-semibold">{new Date(card.dueDate).toLocaleDateString('pt-BR')}</p>
+                      <p className="font-semibold">{new Date(card.dueDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</p>
                     </div>
                   </div>
                 </div>
