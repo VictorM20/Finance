@@ -48,8 +48,7 @@ export const Login = ({ onLogin, onSwitchToRegister }) => {
           id: 1,
           name: 'João Silva',
           email: email,
-          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?crop=face&fit=crop&w=100&h=100',
-          plan: 'Premium'
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?crop=face&fit=crop&w=100&h=100'
         });
       } else {
         alert('Por favor, preencha email e senha');
