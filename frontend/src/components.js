@@ -720,6 +720,41 @@ export const CreditCards = () => {
   ]);
 
   const [showAddCard, setShowAddCard] = useState(false);
+  const [newCard, setNewCard] = useState({
+    name: '',
+    number: '',
+    limit: '',
+    dueDate: ''
+  });
+
+  const handleAddCard = (e) => {
+    e.preventDefault();
+    if (!newCard.name || !newCard.number || !newCard.limit || !newCard.dueDate) {
+      alert('Por favor, preencha todos os campos');
+      return;
+    }
+
+    const card = {
+      id: cards.length + 1,
+      name: newCard.name,
+      number: newCard.number,
+      limit: parseFloat(newCard.limit),
+      used: 0,
+      available: parseFloat(newCard.limit),
+      dueDate: newCard.dueDate,
+      brand: 'Mastercard',
+      color: 'from-blue-600 to-blue-800'
+    };
+
+    setCards([...cards, card]);
+    setShowAddCard(false);
+    setNewCard({ name: '', number: '', limit: '', dueDate: '' });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewCard(prev => ({ ...prev, [name]: value }));
+  };
 
   const totalLimit = cards.reduce((sum, card) => sum + card.limit, 0);
   const totalUsed = cards.reduce((sum, card) => sum + card.used, 0);
