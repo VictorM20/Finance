@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
 import './App.css';
-import { Dashboard, Transactions, Goals, Reports, Investments, CreditCards, Profile, Sidebar, Login, ThemeProvider } from './components';
+import { Dashboard, Transactions, Goals, Reports, Investments, CreditCards, Profile, Sidebar, Login, Register, ThemeProvider } from './components';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [user, setUser] = useState(null);
+  const [currentView, setCurrentView] = useState('login'); // 'login' or 'register'
 
   const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  const handleRegister = (userData) => {
     setUser(userData);
   };
 
   const handleLogout = () => {
     setUser(null);
     setActiveTab('dashboard');
+    setCurrentView('login');
+  };
+
+  const switchToRegister = () => {
+    setCurrentView('register');
+  };
+
+  const switchToLogin = () => {
+    setCurrentView('login');
   };
 
   const renderContent = () => {
@@ -39,9 +53,13 @@ function App() {
   return (
     <ThemeProvider>
       <div className="App min-h-screen bg-gray-50 dark:bg-gray-900 flex">
-        {/* Se não estiver logado, mostra a tela de login */}
+        {/* Se não estiver logado, mostra login ou cadastro */}
         {!user ? (
-          <Login onLogin={handleLogin} />
+          currentView === 'login' ? (
+            <Login onLogin={handleLogin} onSwitchToRegister={switchToRegister} />
+          ) : (
+            <Register onRegister={handleRegister} onSwitchToLogin={switchToLogin} />
+          )
         ) : (
           <>
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
