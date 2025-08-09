@@ -1313,6 +1313,71 @@ export const Transactions = () => {
   ]);
 
   const [showAddTransaction, setShowAddTransaction] = useState(false);
+  const [newTransaction, setNewTransaction] = useState({
+    description: '',
+    amount: '',
+    type: 'expense',
+    category: 'alimentacao',
+    account: 'Conta Corrente',
+    date: new Date().toISOString().split('T')[0]
+  });
+
+  const handleAddTransaction = (e) => {
+    e.preventDefault(); // Prevenir reload da página
+    
+    if (!newTransaction.description || !newTransaction.amount) {
+      alert('Por favor, preencha todos os campos obrigatórios');
+      return;
+    }
+
+    const transaction = {
+      id: transactions.length + 1,
+      description: newTransaction.description,
+      amount: newTransaction.type === 'income' ? 
+        parseFloat(newTransaction.amount) : 
+        -parseFloat(newTransaction.amount),
+      type: newTransaction.type,
+      category: getCategoryName(newTransaction.category),
+      date: newTransaction.date,
+      account: newTransaction.account
+    };
+
+    setTransactions([transaction, ...transactions]);
+    setShowAddTransaction(false);
+    
+    // Resetar formulário
+    setNewTransaction({
+      description: '',
+      amount: '',
+      type: 'expense',
+      category: 'alimentacao',
+      account: 'Conta Corrente',
+      date: new Date().toISOString().split('T')[0]
+    });
+  };
+
+  const getCategoryName = (category) => {
+    const categories = {
+      'alimentacao': 'Alimentação',
+      'transporte': 'Transporte',
+      'moradia': 'Moradia',
+      'lazer': 'Lazer',
+      'saude': 'Saúde',
+      'educacao': 'Educação',
+      'salario': 'Salário',
+      'freelance': 'Freelance',
+      'outros': 'Outros'
+    };
+    return categories[category] || 'Outros';
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTransaction(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
@@ -1320,7 +1385,10 @@ export const Transactions = () => {
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Transações</h1>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Transações</h1>
+              <p className="text-gray-600 dark:text-gray-300">Total de {transactions.length} transações</p>
+            </div>
             <button 
               onClick={() => setShowAddTransaction(true)}
               className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
@@ -1375,43 +1443,102 @@ export const Transactions = () => {
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-md mx-4">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Nova Transação</h2>
               
-              <form className="space-y-4">
+              <form onSubmit={handleAddTransaction} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Descrição</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Descrição *</label>
                   <input 
-                    type="text" 
+                    type="text"
+                    name="description"
+                    value={newTransaction.description}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="Ex: Supermercado"
+                    placeholder="Ex: Supermercado, Salário, etc."
+                    required
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Valor</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Valor *</label>
                   <input 
-                    type="number" 
+                    type="number"
+                    name="amount"
+                    value={newTransaction.amount}
+                    onChange={handleInputChange}
+                    step="0.01"
+                    min="0"
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     placeholder="0,00"
+                    required
                   />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Tipo</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-                    <option value="expense">Despesa</option>
-                    <option value="income">Receita</option>
+                  <select 
+                    name="type"
+                    value={newTransaction.type}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="expense">💸 Despesa</option>
+                    <option value="income">💰 Receita</option>
                   </select>
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Categoria</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-                    <option value="alimentacao">Alimentação</option>
-                    <option value="transporte">Transporte</option>
-                    <option value="moradia">Moradia</option>
-                    <option value="lazer">Lazer</option>
-                    <option value="saude">Saúde</option>
-                    <option value="outros">Outros</option>
+                  <select 
+                    name="category"
+                    value={newTransaction.category}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    {newTransaction.type === 'expense' ? (
+                      <>
+                        <option value="alimentacao">🍔 Alimentação</option>
+                        <option value="transporte">🚗 Transporte</option>
+                        <option value="moradia">🏠 Moradia</option>
+                        <option value="lazer">🎮 Lazer</option>
+                        <option value="saude">💊 Saúde</option>
+                        <option value="educacao">📚 Educação</option>
+                        <option value="outros">📦 Outros</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="salario">💼 Salário</option>
+                        <option value="freelance">💻 Freelance</option>
+                        <option value="outros">💰 Outros</option>
+                      </>
+                    )}
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Conta</label>
+                  <select 
+                    name="account"
+                    value={newTransaction.account}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="Conta Corrente">🏦 Conta Corrente</option>
+                    <option value="Poupança">💰 Poupança</option>
+                    <option value="Cartão Crédito">💳 Cartão Crédito</option>
+                    <option value="Cartão Débito">💎 Cartão Débito</option>
+                    <option value="Dinheiro">💵 Dinheiro</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Data</label>
+                  <input 
+                    type="date"
+                    name="date"
+                    value={newTransaction.date}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
                 </div>
                 
                 <div className="flex space-x-4 mt-6">
@@ -1424,9 +1551,9 @@ export const Transactions = () => {
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                   >
-                    Salvar
+                    💾 Salvar
                   </button>
                 </div>
               </form>
