@@ -151,42 +151,63 @@ export const Dashboard = () => {
 
         {/* Market Data */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Mercado Financeiro</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-800">Mercado Financeiro</h3>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-xs text-gray-500">Tempo Real</span>
+            </div>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="text-center">
-              <p className="text-xs text-gray-500">USD/BRL</p>
+            <div className="text-center bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">USD/BRL</p>
               <p className="text-lg font-bold">R$ {marketData.usd.value.toFixed(2)}</p>
-              <p className={`text-xs ${marketData.usd.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {marketData.usd.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.usd.change)}%
-              </p>
+              <div className="flex items-center justify-center space-x-1">
+                <p className={`text-xs ${marketData.usd.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {marketData.usd.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.usd.change).toFixed(1)}%
+                </p>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{marketData.usd.updated}</p>
             </div>
-            <div className="text-center">
-              <p className="text-xs text-gray-500">EUR/BRL</p>
+            <div className="text-center bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">EUR/BRL</p>
               <p className="text-lg font-bold">R$ {marketData.eur.value.toFixed(2)}</p>
-              <p className={`text-xs ${marketData.eur.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {marketData.eur.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.eur.change)}%
-              </p>
+              <div className="flex items-center justify-center space-x-1">
+                <p className={`text-xs ${marketData.eur.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {marketData.eur.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.eur.change).toFixed(1)}%
+                </p>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{marketData.eur.updated}</p>
             </div>
-            <div className="text-center">
-              <p className="text-xs text-gray-500">Bitcoin</p>
-              <p className="text-lg font-bold">R$ {marketData.btc.value.toLocaleString('pt-BR')}</p>
-              <p className={`text-xs ${marketData.btc.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {marketData.btc.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.btc.change)}%
-              </p>
+            <div className="text-center bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">Bitcoin</p>
+              <p className="text-lg font-bold">R$ {Math.round(marketData.btc.value).toLocaleString('pt-BR')}</p>
+              <div className="flex items-center justify-center space-x-1">
+                <p className={`text-xs ${marketData.btc.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {marketData.btc.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.btc.change).toFixed(1)}%
+                </p>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{marketData.btc.updated}</p>
             </div>
-            <div className="text-center">
-              <p className="text-xs text-gray-500">SELIC</p>
+            <div className="text-center bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">SELIC</p>
               <p className="text-lg font-bold">{marketData.selic.value}%</p>
-              <p className={`text-xs ${marketData.selic.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {marketData.selic.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.selic.change)}%
-              </p>
+              <div className="flex items-center justify-center space-x-1">
+                <p className={`text-xs ${marketData.selic.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {marketData.selic.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.selic.change).toFixed(1)}%
+                </p>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{marketData.selic.updated}</p>
             </div>
-            <div className="text-center">
-              <p className="text-xs text-gray-500">IPCA</p>
+            <div className="text-center bg-gray-50 rounded-lg p-3">
+              <p className="text-xs text-gray-500 mb-1">IPCA</p>
               <p className="text-lg font-bold">{marketData.ipca.value}%</p>
-              <p className={`text-xs ${marketData.ipca.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {marketData.ipca.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.ipca.change)}%
-              </p>
+              <div className="flex items-center justify-center space-x-1">
+                <p className={`text-xs ${marketData.ipca.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {marketData.ipca.change >= 0 ? '↗' : '↘'} {Math.abs(marketData.ipca.change).toFixed(1)}%
+                </p>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{marketData.ipca.updated}</p>
             </div>
           </div>
         </div>
